@@ -31,7 +31,7 @@ app.use((error, req, res, next) => {
 mongoose.connect(`mongodb+srv://${process.env.username}:${process.env.password}@${process.env.projectname}.cpsst.mongodb.net/${process.env.bdname}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(result => app.listen(3000, console.log("Server started !")))
+}).then(result => app.listen(process.env.PORT || 3000, console.log("Server started !")))
     .catch(err => console.log(err));
 // mongoose.connect('mongodb://localhost:27017/Laposte3', {
 //     useNewUrlParser: true,
