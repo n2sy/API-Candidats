@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cvRoutes = require('./routes/cv');
 const authRoutes = require('./routes/auth');
 var cors = require('cors');
+var fs = require("fs");
+var https = require("https");
 require('dotenv').config();
 const app = express();
 
@@ -22,6 +24,7 @@ app.use('/auth', authRoutes);
 app.use('/cv', cvRoutes);
 
 app.use((error, req, res, next) => {
+    console.log("^^^^^^^^^^^^", error);
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
@@ -31,14 +34,7 @@ app.use((error, req, res, next) => {
 mongoose.connect(`mongodb+srv://${process.env.username}:${process.env.password}@${process.env.projectname}.cpsst.mongodb.net/${process.env.bdname}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(result => https
-    .createServer(
-        {
-            key: fs.readFileSync("server.key"),
-            cert: fs.readFileSync("server.cert"),
-        },
-        app
-    ).listen(process.env.PORT || 3000, console.log("Server started !")))
+}).then(app.listen(process.env.PORT || 3000, console.log("Server started !")))
     .catch(err => console.log(err));
 
 

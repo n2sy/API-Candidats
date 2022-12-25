@@ -2,7 +2,7 @@ const Personne = require('../models/person');
 const _ = require('lodash');
 
 
-exports.getAllPersons = async (req, res) => {
+exports.getAllPersons = async (req, res, next) => {
 
     // Personne.find().then(result => {
     //     res.status(200).json(result);
@@ -11,17 +11,21 @@ exports.getAllPersons = async (req, res) => {
     //         console.log(err);
     //     })
 
+    const filter = req.query.filter
+
     try {
-        const result = await Personne.find();
+        const result = await Personne.find({
+            "nom": new RegExp(filter, 'i')
+        });
         res.status(200).json(result);
     }
     catch (err) {
-        console.log(err);
+        next(err);
     }
 
 
 }
-exports.getPerson = (req, res) => {
+exports.getPerson = (req, res, next) => {
     const pId = req.params.id;
 
     Personne.findById(pId)
@@ -29,7 +33,7 @@ exports.getPerson = (req, res) => {
             if (!p) {
                 const error = new Error('Could not find this person');
                 error.statusCode = 404;
-                throw error;
+                next(error);
             }
             res.status(200).json(p)
         })
@@ -66,13 +70,13 @@ exports.createPerson = (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            next();
+            next(err);
         })
 
 
 
 }
-exports.updatePerson = (req, res) => {
+exports.updatePerson = (req, res, next) => {
     const pId = req.params['id'];
     // const prenom = req.body.prenom;
     // const nom = req.body.nom;
@@ -105,20 +109,19 @@ exports.updatePerson = (req, res) => {
             });
         })
         .catch(err => {
-            console.log(err);
+            next(err);
         })
 
 }
-exports.deletePerson = (req, res) => {
+exports.deletePerson = (req, res, next) => {
 
     const pId = req.params['id'];
     Personne.findByIdAndRemove(pId)
         .then(p => {
-
+            console.log(p);
             if (!p) {
                 const error = new Error('Could not find this person');
                 error.statusCode = 404;
-
                 throw error;
             }
             res.status(200).json({
@@ -127,7 +130,7 @@ exports.deletePerson = (req, res) => {
             })
         })
         .catch(err => {
-            console.log(err);
+            next(err);
         })
 }
 
