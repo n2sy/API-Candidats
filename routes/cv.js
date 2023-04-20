@@ -10,13 +10,13 @@ router.get('/persons', cvCtrl.getAllPersons);
 //récupérer les infos sur une SEULE personne
 router.get('/persons/:id', cvCtrl.getPerson);
 
-//création d'une nouvelle personne
+//création d'une nouvelle personne sans token
 router.post('/persons/free', cvCtrl.createPerson);
 
-//Update d'une personne
+//Update d'une personne sans token
 router.put('/persons/free/:id', cvCtrl.updatePerson);
 
-//suppression d'une personne
+//suppression d'une personne sans token
 router.delete('/persons/free/:id', cvCtrl.deletePerson);
 
 //création d'une nouvelle personne

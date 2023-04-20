@@ -20,8 +20,9 @@ const personSchema = new Schema({
         require: true
     },
     avatar: {
-        type: String,
-        require: false
+        name: String,
+        // data: Buffer,
+        // contentType: String
     },
 }, {
     versionKey: false // You should be aware of the outcome after set to false

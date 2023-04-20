@@ -1,5 +1,7 @@
 const Personne = require('../models/person');
 const _ = require('lodash');
+const fs = require("fs");
+const path = require("path");
 
 
 exports.getAllPersons = async (req, res, next) => {
@@ -44,22 +46,18 @@ exports.getPerson = (req, res, next) => {
 
 }
 exports.createPerson = (req, res, next) => {
-    // const prenom = req.body.prenom;
-    // const nom = req.body.nom;
-    // const age = req.body.age;
-    // const profession = req.body.profession;
-    // const avatar = req.body.avatar;
 
-    // const newPerson = new Personne({
-    //     prenom: prenom,
-    //     nom: nom,
-    //     age: age,
-    //     profession: profession,
-    //     avatar: avatar
-    // });
-
-    let newP = _.pick(req.body, ['prenom', 'nom', 'age', 'profession', 'avatar']);
+    let newP = _.pick(req.body, ['prenom', 'nom', 'age', 'profession']);
     const newPerson = new Personne(newP);
+
+    if (req.body.avatar) {
+        const urlAvatar = req.protocol + "://" + req.get("host");
+        newPerson.avatar = urlAvatar + "/avatars/" + req.body.avatar;
+        //data: fs.readFileSync(path.join(process.cwd(), '/uploads/', req.body.avatar)),
+        //contentType: 'image/png'
+
+    }
+
 
     newPerson.save()
         .then(result => {
